@@ -1,5 +1,5 @@
 # rust-roadmap-ru
-🦀 Полный roadmap по изучению Rust на русском + большой список ресурсов. Telegram: t.me/rust_code
+🦀 Полный roadmap по изучению Rust на русском + большой список ресурсов. Telegram: [t.me/rust_code](https://t.me/+HelhY88sArowYjgy)
 <img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/9bae9d76-2c51-4ce8-8164-528dd7804fbe" />
 
 
