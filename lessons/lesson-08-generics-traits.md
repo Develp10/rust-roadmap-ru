@@ -1,95 +1,104 @@
-# Урок 9. Времена жизни (lifetimes)
+# Урок 8. Дженерики и трейты
 
 ## Теория
 
-Lifetimes — это статическое описание того, сколько живёт ссылка. Они ничего не меняют во времени жизни данных; это лишь **язык для доказательств компилятору**.
+**Дженерики** позволяют писать код, абстрагированный по типу, который мономорфизируется на этапе компиляции (zero-cost). **Трейты** описывают поведение и используются как ограничения на типы.
 
-### Правила elision
-
-Компилятор автоматически проставляет времена жизни по трём правилам:
-
-1. Каждый входной параметр-ссылка получает свой lifetime.
-2. Если input lifetime ровно один, он присваивается всем output lifetimes.
-3. Если есть `&self` или `&mut self`, его lifetime присваивается всем output.
-
-### Явные lifetimes
+### Дженерики
 
 ```rust
-fn longest<'a>(a: &'a str, b: &'a str) -> &'a str {
-    if a.len() > b.len() { a } else { b }
+fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
+    let mut max = list[0];
+    for &x in list { if x > max { max = x; } }
+    max
 }
 ```
 
-`'a` здесь — это **пересечение** времён жизни `a` и `b`: выходная ссылка живёт не дольше обеих входных.
-
-### Структуры со ссылками
+### Трейты
 
 ```rust
-struct Excerpt<'a> { part: &'a str }
+trait Greet {
+    fn hello(&self) -> String;
+    fn shout(&self) -> String { self.hello().to_uppercase() } // default
+}
 
-impl<'a> Excerpt<'a> {
-    fn level(&self) -> &str { self.part } // elision работает
+struct Cat;
+impl Greet for Cat {
+    fn hello(&self) -> String { "meow".into() }
 }
 ```
 
-### 'static
+### Trait bounds, where, dyn vs impl Trait
 
-`'static` — ссылка живёт всю программу. Строковые литералы имеют тип `&'static str`. Не путать с trait bound `T: 'static` — это другое.
+```rust
+fn print_all<T>(xs: &[T]) where T: std::fmt::Debug { for x in xs { println!("{:?}", x); } }
+
+fn make_adder(x: i32) -> impl Fn(i32) -> i32 { move |y| x + y } // статически
+fn pick(b: bool) -> Box<dyn Greet> { if b { Box::new(Cat) } else { Box::new(Cat) } } // динамически
+```
+
+- `impl Trait` — статическая диспетчеризация, один конкретный тип.
+- `dyn Trait` — динамическая, через vtable, размер неизвестен ⇒ нужен указатель (`Box`/`&`).
+
+### Associated types vs generics
+
+```rust
+trait Iterator2 { type Item; fn next2(&mut self) -> Option<Self::Item>; }
+```
+
+Associated type фиксирует один тип на реализацию; дженерик в трейте позволяет много реализаций для разных параметров.
 
 ## Практика
 
+Реализуйте трейт `Summary` с методом по умолчанию `summarize` и переопределите его для двух структур.
+
 ```rust
-fn longest_with<'a, 'b>(x: &'a str, y: &'b str) -> &'a str
-where 'b: 'a {
-    if x.len() > y.len() { x } else { y }
+trait Summary {
+    fn title(&self) -> &str;
+    fn summarize(&self) -> String { format!("(Read more from {}...)", self.title()) }
+}
+
+struct Article { headline: String, content: String }
+struct Tweet { user: String, text: String }
+
+impl Summary for Article {
+    fn title(&self) -> &str { &self.headline }
+    fn summarize(&self) -> String { format!("{}: {}", self.headline, &self.content[..self.content.len().min(20)]) }
+}
+impl Summary for Tweet {
+    fn title(&self) -> &str { &self.user }
+}
+
+fn main() {
+    let a = Article { headline: "Rust 2026".into(), content: "Что нового в языке...".into() };
+    let t = Tweet { user: "@ferris".into(), text: "I love Rust".into() };
+    println!("{}", a.summarize());
+    println!("{}", t.summarize());
 }
 ```
-
-`'b: 'a` читается "'b живёт не меньше 'a".
 
 ## Тест
 
-**1.** Почему это не компилируется?
+1. В чём принципиальная разница между `impl Trait` в позиции аргумента и в позиции возврата?
+2. Почему `fn f() -> dyn Trait` не компилируется, а `fn f() -> Box<dyn Trait>` — да?
+3. Что такое object safety? Какие методы делают трейт не object-safe?
+4. Чем `where T: Clone` отличается от `<T: Clone>` — есть ли семантические различия?
+5. Что выведет код?
 ```rust
-fn first<'a>(s: &'a str) -> &'a str {
-    let local = String::from(s);
-    &local
-}
+trait A { fn x(&self) -> i32 { 1 } }
+trait B: A { fn x(&self) -> i32 { 2 } }
+struct S;
+impl A for S {}
+impl B for S {}
+fn main() { let s = S; println!("{}", s.x()); }
 ```
-
-**2.** Как это исправить?
-```rust
-fn longest(a: &str, b: &str) -> &str {
-    if a.len() > b.len() { a } else { b }
-}
-```
-
-**3.** Что выведет это?
-```rust
-fn main() {
-    let r;
-    {
-        let s = String::from("x");
-        r = &s;
-        println!("{r}");
-    }
-}
-```
-
-**4.** Что значит `T: 'static`?
-
-**5.** Можно ли в `struct` хранить ссылку без указания lifetime?
 
 ---
 
 ### Ответы
 
-1. `local` живёт внутри функции и дропается на выходе. Ссылка `&local` была бы dangling. Решение — вернуть `String`, или брать срез входного аргумента.
-
-2. Добавить времена жизни: `fn longest<'a>(a: &'a str, b: &'a str) -> &'a str`. Elision не работает при двух входных ссылочных параметрах без `self`.
-
-3. `x`. `println!` находится внутри блока, где `s` ещё жива. Переместить вывод наружу было бы ошибкой.
-
-4. Тип владеет только такими данными, которые живут всю программу, **либо** не содержит никаких ссылок (обычный `String` удовлетворяет этому).
-
-5. Нет. Ссылки в полях требуют lifetime-параметр в объявлении структуры: `struct R<'a> { x: &'a str }`.
+1. В аргументе `impl Trait` — это сахар над дженериком (каждый вызов мономорфизируется). В возврате — это **один конкретный анонимный тип**, выбранный функцией; вызывающий не может выбрать другой тип.
+2. `dyn Trait` — unsized (`!Sized`); функция должна возвращать значение известного размера. `Box<dyn Trait>` — указатель, имеет фиксированный размер.
+3. Object safety — свойство трейта, позволяющее использовать его как `dyn Trait`. Не object-safe: методы с `Self` в сигнатуре по значению, дженерик-методы, `Sized`-методы (без `where Self: Sized`).
+4. Семантически они эквивалентны для простых случаев, но `where` читабельнее и поддерживает более сложные ограничения (например, `where for<'a> &'a T: Foo`).
+5. Ошибка компиляции: неоднозначный вызов `s.x()` — нужно `<S as A>::x(&s)` или `<S as B>::x(&s)`.
