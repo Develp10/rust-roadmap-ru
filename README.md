@@ -1,3 +1,115 @@
+# 🦀 Rust Roadmap (на русском)
+
+Полный курс по языку программирования Rust на русском языке: от первой строчки кода до асинхронности, embedded и WebAssembly. Каждый урок состоит из теории, практики и теста с ответами.
+
+## 📚 О курсе
+
+- **25 уроков** — от базового синтаксиса до прикладной разработки
+- **Каждый урок**: теория с примерами → практика с задачами → тест → разбор ответов
+- **Только Rust 2021/2024** — современный идиоматичный код, актуальные крейты экосистемы
+- **Без воды** — только практически полезный материал
+
+## 🗺️ Дорожная карта
+
+### Часть 1. Основы (уроки 1–8)
+
+| № | Урок | Темы |
+|---|------|------|
+| 1 | [Введение в Rust](lessons/lesson-01-intro.md) | установка, cargo, hello world, структура проекта |
+| 2 | [Переменные и типы](lessons/lesson-02-variables-types.md) | let/mut, целые/плавающие, bool, char, кортежи, массивы, преобразования, переполнение |
+| 3 | [Управление потоком](lessons/lesson-03-control-flow.md) | if/else, loop, while, for, match, let-else, loop labels |
+| 4 | [Владение (ownership)](lessons/lesson-04-ownership.md) | move, Copy, Clone, scope, Drop, замыкания и захват |
+| 5 | [Заимствование и ссылки](lessons/lesson-05-borrowing.md) | &T, &mut T, NLL, reborrow, elision, времена жизни |
+| 6 | [Slices, String, Vec](lessons/lesson-06-slices-strings-vec.md) | срезы, UTF-8, capacity, итерация по строкам |
+| 7 | [Structs и enums](lessons/lesson-07-structs-enums.md) | tuple/unit-структуры, derive, match на enum, niche, builder |
+| 8 | [Generics и traits](lessons/lesson-08-generics-traits.md) | мономорфизация, dyn vs impl, trait bounds, ассоциированные типы, перегрузка операторов |
+
+### Часть 2. Углублённые темы (уроки 9–14)
+
+| № | Урок | Темы |
+|---|------|------|
+| 9 | [Lifetimes](lessons/lesson-09-lifetimes.md) | элизия, 'static, HRTB, структуры со ссылками |
+| 10 | [Обработка ошибок](lessons/lesson-10-error-handling.md) | Result/Option, ? оператор, panic, thiserror, anyhow, FFI |
+| 11 | [Коллекции и итераторы](lessons/lesson-11-collections-iterators.md) | HashMap, BTreeMap, VecDeque, BinaryHeap, кастомные итераторы |
+| 12 | [Умные указатели](lessons/lesson-12-smart-pointers.md) | Box, Rc, Arc, RefCell, Mutex/RwLock, OnceLock, Cow, Weak |
+| 13 | [Многопоточность](lessons/lesson-13-concurrency.md) | thread, Send/Sync, каналы, scoped threads |
+| 14 | [Async и Tokio](lessons/lesson-14-async-tokio.md) | Future, async/await, tokio runtime, select!, каналы |
+
+### Часть 3. Продвинутые возможности (уроки 15–19)
+
+| № | Урок | Темы |
+|---|------|------|
+| 15 | [Макросы](lessons/lesson-15-macros.md) | macro_rules!, процедурные макросы, derive |
+| 16 | [Тестирование](lessons/lesson-16-testing.md) | unit, integration, doc-tests, property-based |
+| 17 | [Экосистема Cargo](lessons/lesson-17-cargo-ecosystem.md) | workspaces, features, profiles, публикация |
+| 18 | [Unsafe и FFI](lessons/lesson-18-unsafe-ffi.md) | unsafe, raw-указатели, extern "C", bindgen |
+| 19 | [Веб с axum](lessons/lesson-19-web-axum.md) | роутинг, extractors, middleware, JSON, state |
+
+### Часть 4. Прикладные направления (уроки 20–25)
+
+| № | Урок | Темы |
+|---|------|------|
+| 20 | [Базы данных: sqlx и diesel](lessons/lesson-20-databases-sqlx.md) | пулы, миграции, транзакции, repository |
+| 21 | [gRPC с tonic](lessons/lesson-21-grpc-tonic.md) | protobuf, streaming, interceptors, TLS |
+| 22 | [Embedded и no_std](lessons/lesson-22-embedded-no-std.md) | core/alloc, embedded-hal, RTIC, Embassy |
+| 23 | [WebAssembly](lessons/lesson-23-wasm.md) | wasm-bindgen, web-sys, Yew/Leptos, WASI |
+| 24 | [Паттерны проектирования](lessons/lesson-24-design-patterns.md) | newtype, builder, typestate, strategy, RAII |
+| 25 | [CLI-приложения](lessons/lesson-25-cli-tools.md) | clap, anyhow, tracing, indicatif, ratatui |
+
+## 🚀 Как учиться
+
+1. Установите Rust с [rustup.rs](https://rustup.rs/) и любой редактор с поддержкой rust-analyzer (VS Code, Helix, Zed, RustRover).
+2. Идите по урокам последовательно: каждый следующий опирается на предыдущий.
+3. Для каждого урока: прочитайте теорию → разберите код практики → решите задачи самостоятельно → пройдите тест и сверьтесь с ответами.
+4. Создавайте `cargo new` песочницу под каждый урок и экспериментируйте.
+
+## 🛠️ Что понадобится
+
+- **Rust 1.75+** (`rustup update stable`)
+- **cargo** — встроенный пакетный менеджер
+- **rust-analyzer** — LSP для подсветки и автодополнения
+- Терминал, базовое знакомство с Git и любым другим языком (для контекста)
+
+## 📦 Полезные команды
+
+```bash
+# создать проект
+cargo new my_project
+cd my_project
+
+# собрать и запустить
+cargo run
+cargo build --release
+
+# тесты, проверки, форматирование
+cargo test
+cargo clippy
+cargo fmt
+
+# обновить зависимости
+cargo update
+```
+
+## 📖 Дополнительные ресурсы
+
+- [The Rust Book (русский перевод)](https://doc.rust-lang.ru/book/)
+- [Rust by Example](https://doc.rust-lang.org/rust-by-example/)
+- [Rustlings — упражнения](https://github.com/rust-lang/rustlings)
+- [crates.io](https://crates.io/) — реестр пакетов
+- [docs.rs](https://docs.rs/) — документация всех опубликованных крейтов
+- [This Week in Rust](https://this-week-in-rust.org/) — еженедельный дайджест
+
+## 🤝 Вклад
+
+Нашли опечатку, неточность или хотите добавить пример? Открывайте issue или присылайте pull request.
+
+## 📜 Лицензия
+
+Материалы курса распространяются под лицензией MIT. Используйте, копируйте, модифицируйте и распространяйте свободно.
+
+---
+
+> Удачи в изучении Rust! 🦀
 # rust-roadmap-ru
 🦀 Полный roadmap по изучению Rust на русском + большой список ресурсов. Telegram: [t.me/rust_code](https://t.me/+HelhY88sArowYjgy)
 <img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/9bae9d76-2c51-4ce8-8164-528dd7804fbe" />
