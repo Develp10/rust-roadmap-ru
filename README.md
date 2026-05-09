@@ -3,6 +3,91 @@
 <img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/9bae9d76-2c51-4ce8-8164-528dd7804fbe" />
 
 
+---
+
+## 📚 Полезные ресурсы
+
+### 📺 Telegram-каналы и подборки
+- **[t.me/rust_code](https://t.me/rust_code)** — основной канал по Rust на русском.
+- **[t.me/books_englishhh](https://t.me/books_englishhh)** — англоязычные книги и материалы по Rust.
+- **[t.me/ai_machinelearning_big_data](https://t.me/ai_machinelearning_big_data)** — AI, ML, Big Data (полезно при работе с `candle`, `burn`, `tch-rs`).
+- **[Папка с обучающими ресурсами](https://t.me/addlist/2Ls-snqEeytkMDgy)** — большая подборка каналов для разработчиков.
+
+### 📖 Статьи на русском (must-read для глубокого понимания)
+- [Твой код на Rust компилируется, проходит тесты и является UB. Ты просто об этом не знаешь](https://habr.com/ru/articles/1033328/) — про скрытые ловушки undefined behavior в безопасном на вид Rust-коде.
+- [Как Rust обманывает процессор: тайная жизнь niche-оптимизации, drop flags и MIR](https://habr.com/ru/articles/1031398/) — внутренности компилятора и неожиданные оптимизации.
+- [Как Rust обманывает процессор. Часть 2: niche сквозь крейты, dropck, Pin и провенанс указателей](https://uproger.com/kak-rust-obmanyvaet-proczessor-chast-2-niche-skvoz-krejty-dropck-pin-i-provenans-ukazatelej/) — продолжение про Pin, dropck и провенанс.
+
+### 📘 Официальная документация
+- **[The Rust Book](https://doc.rust-lang.org/book/)** — главная книга, начинать отсюда. [Русский перевод](https://doc.rust-lang.ru/book/).
+- **[Rust Book с интерактивными квизами](https://rust-book.cs.brown.edu)** — экспериментальная версия от Brown University.
+- **[Rust by Example](https://doc.rust-lang.org/rust-by-example/)** — концепции через работающие примеры.
+- **[The Rustonomicon](https://doc.rust-lang.org/nomicon/)** — тёмная сторона: unsafe, lifetimes, layout.
+- **[The Rust Reference](https://doc.rust-lang.org/reference/)** — формальная спецификация языка.
+- **[Rust Async Book](https://rust-lang.github.io/async-book/)** — асинхронность от создателей языка.
+- **[Rust API Guidelines](https://rust-lang.github.io/api-guidelines/)** — как проектировать идиоматичные API.
+- **[std documentation](https://doc.rust-lang.org/std/)** — стандартная библиотека (читать даже без запроса!).
+
+### 🎓 Бесплатные книги и курсы онлайн
+- **[Rust Atomics and Locks](https://marabos.nl/atomics/)** — Mara Bos, бесплатно онлайн. Про многопоточность и memory ordering.
+- **[Comprehensive Rust](https://google.github.io/comprehensive-rust/)** — курс от Google, 4 дня интенсива.
+- **[100 Exercises To Learn Rust](https://rust-exercises.com/)** — Luca Palmieri.
+- **[Easy Rust](https://dhghomon.github.io/easy_rust/)** — простыми словами для начинающих.
+- **[Too Many Linked Lists](https://rust-unofficial.github.io/too-many-lists/)** — учим Rust через реализацию связных списков (классика!).
+- **[Writing an OS in Rust](https://os.phil-opp.com/)** — Philipp Oppermann, минимальная ОС с нуля.
+- **[Crafting Interpreters на Rust](https://github.com/jeschkies/lox-rs)** — пишем интерпретатор.
+- **[Zero To Production In Rust](https://www.zero2prod.com/)** — Luca Palmieri, веб-сервисы (платная, но стоит того).
+
+### 💪 Практика и упражнения
+- **[Rustlings](https://github.com/rust-lang/rustlings)** — 90+ интерактивных упражнений, обязательно в начале.
+- **[Exercism Rust Track](https://exercism.org/tracks/rust)** — задачи с менторскими ревью.
+- **[Rust Quiz](https://dtolnay.github.io/rust-quiz/)** — каверзные вопросы по семантике от dtolnay.
+- **[Rust Playground](https://play.rust-lang.org/)** — экспериментировать без `cargo`, смотреть MIR/LLVM IR/ASM.
+- **[Codewars](https://www.codewars.com/?language=rust)** — алгоритмические ката.
+- **[Advent of Code](https://adventofcode.com/)** — ежегодный декабрьский марафон, отлично заходит на Rust.
+- **[CodeCrafters](https://codecrafters.io/)** — пиши свой Redis/Git/Docker на Rust.
+
+### 📰 Блоги и новости
+- **[This Week in Rust](https://this-week-in-rust.org/)** — еженедельный дайджест экосистемы. Подписка обязательна.
+- **[Inside Rust Blog](https://blog.rust-lang.org/inside-rust/)** — что происходит внутри команды разработчиков.
+- **[fasterthanli.me](https://fasterthanli.me/)** — Amos, глубокие технические статьи.
+- **[Without Boats](https://without.boats/)** — блог одного из ключевых дизайнеров async Rust.
+- **[Niko Matsakis](https://smallcultfollowing.com/babysteps/)** — сооснователь языка, пишет про типовую систему.
+- **[Manish Goregaokar](https://manishearth.github.io/)** — глубокие посты про unsafe и FFI.
+
+### 🎥 YouTube-каналы
+- **[Jon Gjengset](https://www.youtube.com/@jonhoo)** — многочасовые стримы по внутренностям (Crust of Rust).
+- **[No Boilerplate](https://www.youtube.com/@NoBoilerplate)** — короткие мотивирующие видео про Rust.
+- **[Logan Smith](https://www.youtube.com/@_noisecode)** — продвинутые темы доступным языком.
+- **[Let's Get Rusty](https://www.youtube.com/@letsgetrusty)** — туториалы для начинающих.
+- **[Code to the Moon](https://www.youtube.com/@codetothemoon)** — обзоры экосистемы и крейтов.
+- **[chris biscardi](https://www.youtube.com/@chrisbiscardi)** — bevy, leptos, фронтенд на Rust.
+
+### 🔧 Инструменты, без которых жить нельзя
+- **[rust-analyzer](https://rust-analyzer.github.io/)** — LSP, основа продуктивности.
+- **[cargo-edit](https://github.com/killercup/cargo-edit)** — `cargo add/rm/upgrade`.
+- **[cargo-watch](https://github.com/watchexec/cargo-watch)** — авто-перезапуск при изменениях.
+- **[cargo-expand](https://github.com/dtolnay/cargo-expand)** — посмотреть, во что разворачиваются макросы.
+- **[cargo-nextest](https://nexte.st/)** — быстрый тест-раннер.
+- **[bacon](https://github.com/Canop/bacon)** — фоновый компилятор-watcher.
+
+### 🌐 Сообщество
+- **[Rust Users Forum](https://users.rust-lang.org/)** — лучшее место для вопросов новичков.
+- **[Rust Internals](https://internals.rust-lang.org/)** — обсуждение развития языка.
+- **[r/rust](https://www.reddit.com/r/rust/)** — Reddit-сообщество.
+- **[Rust Discord](https://discord.gg/rust-lang)** — официальный Discord.
+- **[Rust Zulip](https://rust-lang.zulipchat.com/)** — где сидят разработчики компилятора.
+- **[Are We X Yet?](https://wiki.mozilla.org/Areweyet)** — обзоры зрелости экосистемы (`Are We Web Yet?`, `Are We Game Yet?`, `Are We Async Yet?`).
+
+### 🦀 Куратор-листы (awesome-lists)
+- **[awesome-rust](https://github.com/rust-unofficial/awesome-rust)** — главный список крейтов и проектов.
+- **[Not Yet Awesome Rust](https://github.com/not-yet-awesome-rust/not-yet-awesome-rust)** — чего пока не хватает в экосистеме (повод законтрибьютить).
+- **[Awesome Embedded Rust](https://github.com/rust-embedded/awesome-embedded-rust)** — embedded.
+- **[Awesome WebAssembly](https://github.com/mbasso/awesome-wasm)** — WASM.
+
+---
+
+
 # 🦀 Roadmap по изучению Rust: от нуля до профи
 
 Этот путь рассчитан примерно на 6–12 месяцев активного обучения.
