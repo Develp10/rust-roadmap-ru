@@ -1,4 +1,4 @@
-# 🦀 Rust Roadmap (на русском)
+<img width="853" height="1280" alt="image" src="https://github.com/user-attachments/assets/485b9969-4255-420e-a1b5-64a0f0e1e6db" /># 🦀 Rust Roadmap (на русском)
 
 Полный курс по языку программирования Rust на русском языке: от первой строчки кода до асинхронности, embedded и WebAssembly. Каждый урок состоит из теории, практики и теста с ответами.
 
@@ -699,5 +699,6 @@ cargo update
 ---
 
 Удачи в изучении Rust! 🦀
-![Uploading image.png…]()
+<img width="853" height="1280" alt="image" src="https://github.com/user-attachments/assets/d5396f5c-c938-4fb4-8e63-cd48067e9a64" />
+
 
