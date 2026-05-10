@@ -699,3 +699,5 @@ cargo update
 ---
 
 Удачи в изучении Rust! 🦀
+![Uploading image.png…]()
+
