@@ -463,164 +463,403 @@ cargo update
 
 ---
 
-## Этап 11. Уровень профи
+## Этап 11. Уровень профи (4–8 недель и далее)
 
 **Что изучать:**
 
-- **Профилирование**: `perf` + [cargo-flamegraph](https://github.com/flamegraph-rs/flamegraph) (Linux), [Instruments](https://developer.apple.com/xcode/) (macOS), [`samply`](https://github.com/mstange/samply) (кросс-платформенно).
-- **Оптимизация**: SIMD через `std::simd` (nightly) или `std::arch` (stable), хинты `#[inline]`, struct-of-arrays vs array-of-structs, cache-friendly layout.
-- **Fuzz-тестирование**: [`cargo-fuzz`](https://github.com/rust-fuzz/cargo-fuzz) (libFuzzer), [`afl`](https://github.com/rust-fuzz/afl.rs). **Property-based**: [`proptest`](https://github.com/proptest-rs/proptest), [`quickcheck`](https://github.com/BurntSushi/quickcheck).
-- **Чтение исходников** зрелых крейтов: `itertools` → `serde` → `tokio` → `hyper` → `rustc` (по нарастающей сложности). Это самый быстрый путь от среднего до продвинутого.
-- **Open-source-вклад**: бери `E-easy` / `good-first-issue` в любом популярном крейте. Ревью от мейнтейнеров ускоряет рост сильнее любой книги.
-- **Публикация своего крейта** на [crates.io](https://crates.io): хорошие доки, CI на GitHub Actions, [семвер](https://semver.org/), [`cargo-semver-checks`](https://github.com/obi1kenobi/cargo-semver-checks) перед каждым релизом.
-- **Nightly-фичи и RFC-процесс**: читай [Inside Rust Blog](https://blog.rust-lang.org/inside-rust/), [`rust-lang/rfcs`](https://github.com/rust-lang/rfcs), подпишись на [This Week in Rust](https://this-week-in-rust.org/).
+- **Профилирование на уровне CPU и памяти.** Снятие flamegraph'ов, поиск горячих точек, анализ кеш-промахов и аллокаций. Инструменты: `perf` + [cargo-flamegraph](https://github.com/flamegraph-rs/flamegraph) (Linux), [Instruments](https://developer.apple.com/xcode/) (macOS), [`samply`](https://github.com/mstange/samply) (кросс-платформенно), [`heaptrack`](https://github.com/KDE/heaptrack), [`dhat`](https://docs.rs/dhat/).
+- **Микрооптимизации и low-level perf.** SIMD через `std::simd` (nightly) или `std::arch` (stable), хинты `#[inline]` / `#[cold]`, struct-of-arrays vs array-of-structs, cache-friendly layout, выравнивание (`#[repr(C, align(64))]`).
+- **Fuzz-тестирование и property-based.** [`cargo-fuzz`](https://github.com/rust-fuzz/cargo-fuzz) (libFuzzer), [`afl.rs`](https://github.com/rust-fuzz/afl.rs); property-based — [`proptest`](https://github.com/proptest-rs/proptest), [`quickcheck`](https://github.com/BurntSushi/quickcheck), снапшот-тесты — [`insta`](https://github.com/mitsuhiko/insta).
+- **Чтение исходников зрелых крейтов** по нарастающей сложности: `itertools` → `serde` → `tokio` → `hyper` → `rustc`. Это самый быстрый путь от среднего уровня к продвинутому.
+- **Open-source-вклад.** Бери `E-easy` / `good-first-issue` в любом популярном крейте. Ревью от мейнтейнеров — лучший ускоритель роста.
+- **Публикация своего крейта на [crates.io](https://crates.io):** хорошие доки, CI на GitHub Actions, [семвер](https://semver.org/), [`cargo-semver-checks`](https://github.com/obi1kenobi/cargo-semver-checks) перед каждым релизом.
+- **Nightly-фичи и RFC-процесс.** Читай [Inside Rust Blog](https://blog.rust-lang.org/inside-rust/), [`rust-lang/rfcs`](https://github.com/rust-lang/rfcs), подпишись на [This Week in Rust](https://this-week-in-rust.org/).
+
+**Где изучать:**
+
+- The Rust Performance Book — <https://nnethercote.github.io/perf-book/>
+- «Writing High-Performance Rust» (видеосерия Logan Smith и [fasterthanli.me](https://fasterthanli.me/)).
+- Зеркала лекций по `rustc` от разработчиков компилятора на YouTube.
+- Канал [@rust_code](https://t.me/+HelhY88sArowYjgy) — разборы кода и идиом, по которым удобно сверяться.
 
 **Зачем это нужно:** на этом уровне ты перестаёшь *учить Rust* и начинаешь *думать на Rust*. Лучшие инженеры публикуют библиотеки, которыми пользуются другие, шлют фиксы апстрим и понимают компромиссы дизайнеров языка.
+
+**Мини-проект:**
+
+- Возьми любой свой крейт уровня этапа 10, прогоняй его через `cargo-fuzz`, `proptest`, `criterion` — найди и почини хотя бы одну реальную проблему.
+- Сделай PR в популярный крейт (например, `tokio`, `serde`, `clap`, `reqwest`) — пусть даже небольшой фикс доки или теста.
 
 ---
 
 # 🚀 Расширение roadmap: продвинутые темы
 
+> Этапы ниже не обязательно идти строго по порядку — выбирай ту ветку, которая ближе к твоей предметной области (web, embedded, ML, gamedev, distributed systems). Но все они опираются на уверенное прохождение этапов 1–11.
+
 ## Этап 12. Продвинутая типовая система
 
-- Higher-Ranked Trait Bounds (`for<'a>`), GAT (Generic Associated Types).
-- Associated types vs дженерики — когда что выбирать.
-- `PhantomData`, zero-sized types, типобезопасные API.
-- Type-state pattern (`Builder<Unbuilt>` → `Builder<Built>`) — кодировать состояния протокола в типах, чтобы неправильное использование стало ошибкой компиляции.
-- Sealed traits, расширяемые закрытые API.
-- Newtype-паттерн (`struct UserId(u64)`) — разные типы для разных смыслов, без рантайм-стоимости.
-- Variance: covariance, contravariance, invariance (`&mut T` инвариантен).
-- Auto-traits, negative impls (`!Send`, `!Sync`), `?Sized`, dynamically sized types (DST).
+**Что изучать:**
+
+- **HRTB (Higher-Ranked Trait Bounds, `for<'a>`)** и **GAT (Generic Associated Types)** — позволяют выражать «лайфтайм-семейства» и абстракции, которые на обычных дженериках просто не записываются (например, лениво возвращающиеся итераторы со ссылками на собственные данные).
+- **Associated types vs дженерики.** Когда выбирать `type Item;` (одна реализация на тип), а когда `<T>` (много реализаций для одного типа). Рассмотри это на примерах `Iterator` и `Add<T>`.
+- **`PhantomData`, zero-sized types, type-level состояния.** Кодируй состояния протокола в типах (`Builder<Unbuilt>` → `Builder<Built>`), чтобы неправильное использование становилось ошибкой компиляции. Это паттерн **typestate**.
+- **Sealed traits** — закрытые расширяемые API: только модуль-владелец может реализовать трейт у новых типов, потребители — нет.
+- **Newtype-паттерн** (`struct UserId(u64);`) — разные типы для разных смыслов без рантайм-стоимости. Защищает от смешивания `UserId` и `OrderId`.
+- **Variance:** covariance, contravariance, invariance. Почему `&mut T` инвариантен, а `&T` ковариантен.
+- **Auto-traits, negative impls (`!Send`, `!Sync`), `?Sized`, DST** (dynamically sized types).
+
+**Где изучать:**
+
+- The Rustonomicon — <https://doc.rust-lang.org/nomicon/> (главы про variance и DST).
+- The Rust Reference — <https://doc.rust-lang.org/reference/> (раздел про trait bounds).
+- Серия [«Pretty State Machine Patterns in Rust»](https://hoverbear.org/blog/rust-state-machine-pattern/) — про typestate.
+- Jon Gjengset, плейлист «Crust of Rust» на YouTube — лучший разбор GAT, HRTB и subtyping на практике.
+
+**Зачем это нужно:** даёт инструменты для «компилятор-как-теорема» подхода: API становятся такими, что неправильное использование в принципе невозможно. Это отличает middle от senior'а в Rust.
+
+**Мини-проект:**
+
+- Спроектируй type-state API для конечного автомата (HTTP-парсер, протокол хендшейка) — пусть некорректные переходы становятся ошибкой компиляции.
+- Реализуй sealed trait для расширяемого API.
 
 ## Этап 13. Глубокая работа с асинхронностью
 
-- Внутренности `Future`: `Poll`, `Pin`, `Unpin`, self-referential типы.
-- Устройство рантайма: reactor, executor, waker, task scheduling.
-- Cooperative scheduling, проблема блокирующих вызовов в async.
-- `tokio::spawn` vs `spawn_blocking`, `LocalSet`, `JoinSet`.
-- **Cancellation safety** и почему `select!` опасен, если не понимать его.
-- Структурированная конкурентность (`tokio-util`, `async-scoped`).
-- Backpressure в стримах.
-- `async-trait` и нативные async fn в трейтах (стабильны с 1.75).
-- Отладка async-кода: [`tokio-console`](https://github.com/tokio-rs/console), `tracing` spans.
+**Что изучать:**
+
+- **Внутренности `Future`:** `Poll::Ready` / `Poll::Pending`, `Pin`, `Unpin`, self-referential типы и почему они вообще нужны.
+- **Устройство async-рантайма:** reactor (epoll/kqueue/io_uring), executor, waker, task scheduling. Прочитай минимальный executor (например, [`futures::executor`](https://docs.rs/futures/latest/futures/executor/index.html)) от и до.
+- **Cooperative scheduling** и проблема блокирующих вызовов в async. Когда нужен `tokio::task::spawn_blocking`, `LocalSet`, `JoinSet`.
+- **Cancellation safety** и почему `tokio::select!` опасен, если не понимать его. Что значит «фьючи могут быть брошены в любой await-точке».
+- **Структурированная конкурентность.** [`tokio-util`](https://github.com/tokio-rs/tokio), [`async-scoped`](https://github.com/rmanoka/async-scoped), `JoinSet`. Идея: ни одна задача не переживает свой scope.
+- **Backpressure в стримах** (`futures::Stream`, `tokio_stream`). Как не перегрузить медленного потребителя.
+- **`async fn` в трейтах** (стабильны с 1.75) и `#[async_trait]` — когда нужен какой.
+- **Отладка async:** [`tokio-console`](https://github.com/tokio-rs/console), `tracing` spans, `tokio::time::pause()` для детерминированных тестов.
+
+**Где изучать:**
+
+- «Asynchronous Programming in Rust» — <https://rust-lang.github.io/async-book/>
+- Tokio Tutorial — <https://tokio.rs/tokio/tutorial>
+- Серия Alice Ryhl «Actors with Tokio» и «Shared mutable state in Rust».
+- [Without.Boats](https://without.boats/) — блог одного из дизайнеров async/await.
+
+**Зачем это нужно:** большинство production-Rust проектов — async (web, сеть, БД). Поверхностного знания tokio мало: cancellation safety и Pin регулярно ломают код тех, кто их не понял.
+
+**Мини-проект:**
+
+- Напиши свой простейший async-executor на базе `futures::task::Waker` — поймёшь, как всё устроено внутри.
+- Реализуй mini-Redis (TCP-сервер с pub/sub) на чистом `tokio`, добавь `tracing` и `tokio-console`.
 
 ## Этап 14. Производительность и низкий уровень
 
-- Cache-friendly структуры, false sharing, padding.
-- SoA vs AoS (struct of arrays) — выбор раскладки, который часто доминирует в перформансе.
-- Branch prediction, хинты `likely` / `unlikely`.
-- SIMD: `std::simd` (nightly), `std::arch` (stable, платформенные интринсики), крейт [`wide`](https://github.com/Lokathor/wide).
-- Allocator API, кастомные аллокаторы ([`bumpalo`](https://github.com/fitzgen/bumpalo), [`mimalloc`](https://github.com/microsoft/mimalloc), [`jemallocator`](https://github.com/tikv/jemallocator)).
-- Arena-аллокация, [`typed-arena`](https://github.com/SimonSapin/rust-typed-arena).
-- Zero-copy парсинг ([`nom`](https://github.com/rust-bakery/nom), [`winnow`](https://github.com/winnow-rs/winnow), [`zerocopy`](https://github.com/google/zerocopy), [`rkyv`](https://github.com/rkyv/rkyv)).
-- Профилирование: `perf`, `cargo-flamegraph`, `samply`, `tracy`, `dhat-rs`, `cargo-bloat`.
-- Benchmark-driven development ([`criterion`](https://github.com/bheisler/criterion.rs), [`iai`](https://github.com/bheisler/iai)).
+**Что изучать:**
+
+- **Cache-friendly структуры, false sharing, padding.** Почему `Vec<Struct>` часто медленнее, чем struct-of-arrays.
+- **SoA vs AoS** (struct of arrays) — выбор раскладки, который часто доминирует в перформансе горячих циклов.
+- **Branch prediction**, хинты `std::hint::likely` / `unlikely`, `black_box` для бенчмарков.
+- **SIMD:** `std::simd` (nightly, переносимый), `std::arch` (stable, платформенные интринсики), крейт [`wide`](https://github.com/Lokathor/wide) и [`pulp`](https://github.com/sarah-quinones/pulp).
+- **Allocator API**, кастомные аллокаторы: [`bumpalo`](https://github.com/fitzgen/bumpalo), [`mimalloc`](https://github.com/microsoft/mimalloc), [`jemallocator`](https://github.com/tikv/jemallocator).
+- **Arena-аллокация:** [`typed-arena`](https://github.com/SimonSapin/rust-typed-arena), [`bumpalo`](https://github.com/fitzgen/bumpalo) — критично для парсеров и компиляторов.
+- **Zero-copy парсинг:** [`nom`](https://github.com/rust-bakery/nom), [`winnow`](https://github.com/winnow-rs/winnow), [`zerocopy`](https://github.com/google/zerocopy), [`rkyv`](https://github.com/rkyv/rkyv).
+- **Профилирование и анализ:** `perf`, `cargo-flamegraph`, `samply`, [`hyperfine`](https://github.com/sharkdp/hyperfine), [`cargo-bloat`](https://github.com/RazrFalcon/cargo-bloat), [`cargo-show-asm`](https://github.com/pacak/cargo-show-asm).
+- **Benchmark-driven development** через [`criterion`](https://github.com/bheisler/criterion.rs) и [`iai`](https://github.com/bheisler/iai).
+
+**Где изучать:**
+
+- The Rust Performance Book — <https://nnethercote.github.io/perf-book/>.
+- «Algorithmica» (Sergey Slotin) — <https://en.algorithmica.org/hpc/> — общие принципы HPC, применимы к Rust.
+- Видео Logan Smith и Amos (fasterthanli.me) на YouTube.
+
+**Зачем это нужно:** Rust выбирают там, где важна производительность (БД, бэкенды, парсеры, игровые движки, embedded). Без этого этапа Rust используется как «более безопасный Go», а не как замена C++.
+
+**Мини-проект:**
+
+- Возьми один из своих крейтов, замерь baseline через `criterion`, попробуй ускорить в 2–10× через SIMD, arena-аллокацию или zero-copy парсинг.
+- Реализуй простой ray-tracer или JSON-парсер и оптимизируй до уровня serde_json/sonic-rs.
 
 ## Этап 15. Безопасность и корректность
 
-- Формальная верификация: [Kani](https://github.com/model-checking/kani), [Prusti](https://github.com/viperproject/prusti-dev), [Creusot](https://github.com/creusot-rs/creusot).
-- Model checking конкурентности: [`loom`](https://github.com/tokio-rs/loom), [`shuttle`](https://github.com/awslabs/shuttle).
-- Sanitizers через nightly: `-Z sanitizer=address|thread|memory|leak`.
-- Mutation testing ([`cargo-mutants`](https://github.com/sourcefrog/cargo-mutants)).
-- Аудит зависимостей: [`cargo-audit`](https://github.com/rustsec/rustsec), [`cargo-deny`](https://github.com/EmbarkStudios/cargo-deny), [`cargo-vet`](https://github.com/mozilla/cargo-vet), [`cargo-geiger`](https://github.com/geiger-rs/cargo-geiger).
-- Supply-chain security, reproducible builds.
-- Безопасный FFI: ABI-стабильность, panic-unwinding, `catch_unwind`.
+**Что изучать:**
+
+- **Формальная верификация:** [Kani](https://github.com/model-checking/kani) (model checker от AWS), [Prusti](https://github.com/viperproject/prusti-dev) (на основе Viper), [Creusot](https://github.com/creusot-rs/creusot).
+- **Model checking конкурентности:** [`loom`](https://github.com/tokio-rs/loom) — перебор всех возможных переплетений потоков; [`shuttle`](https://github.com/awslabs/shuttle) — randomized concurrency testing.
+- **Sanitizers через nightly:** `-Z sanitizer=address|thread|memory|leak`. Помогают найти UB в `unsafe` коде.
+- **Mutation testing:** [`cargo-mutants`](https://github.com/sourcefrog/cargo-mutants) — оценивает, насколько твои тесты реально проверяют логику.
+- **Аудит зависимостей:** [`cargo-audit`](https://github.com/rustsec/rustsec) (CVE), [`cargo-deny`](https://github.com/EmbarkStudios/cargo-deny) (лицензии + банлисты), [`cargo-vet`](https://github.com/mozilla/cargo-vet), [`cargo-geiger`](https://github.com/geiger-rs/cargo-geiger) (поиск `unsafe`).
+- **Supply-chain security:** reproducible builds, SBOM, проверки на typo-squatting.
+- **Безопасный FFI:** ABI-стабильность, `#[repr(C)]`, корректное распространение panic'ов через границу языка, `catch_unwind`.
+
+**Где изучать:**
+
+- The Rustonomicon — <https://doc.rust-lang.org/nomicon/> (про UB и sound `unsafe`).
+- RustSec Advisory DB — <https://rustsec.org/>.
+- Туториалы Kani и Loom в их репозиториях.
+- [«Learn Rust the Dangerous Way»](https://cliffle.com/p/dangerust/) — пошаговое освоение `unsafe`.
+
+**Зачем это нужно:** в инфраструктурных и крипто-крейтах ошибки означают потерю денег и данных. Эти инструменты — стандарт в крупных Rust-кодовых базах (AWS, Google, Mozilla, Cloudflare).
+
+**Мини-проект:**
+
+- Возьми любой свой `unsafe`-блок и докажи его корректность через Kani или хотя бы прогон под Miri и AddressSanitizer.
+- Настрой CI с `cargo-audit`, `cargo-deny`, `cargo-mutants` для одного из своих крейтов.
 
 ## Этап 16. Архитектура и паттерны проектирования
 
-- Идиоматичный Rust: builder, typestate, RAII-guards, newtype.
-- Hexagonal/Clean architecture без DI-фреймворков.
-- Error handling: библиотека (`thiserror`) vs приложение (`anyhow`, `eyre`, `color-eyre`).
-- Антипаттерны: борьба с borrow checker, избыточное `Arc<Mutex<_>>`, clone-driven development.
-- Композиция вместо наследования, enum-полиморфизм vs trait objects.
+**Что изучать:**
+
+- **Идиоматичный Rust:** builder, typestate, RAII-guards (`MutexGuard`, `Drop`), newtype.
+- **Hexagonal / Clean architecture без DI-фреймворков.** В Rust DI делается через дженерики и трейты, а не через рантайм-контейнеры. Изучи, как структурировать большой сервис без Spring-подобных фреймворков.
+- **Error handling: библиотека vs приложение.** В библиотеках — `thiserror` + конкретные enum-ошибки; в приложениях — `anyhow` / `eyre` / `color-eyre` + контекст. Эти две стратегии нельзя смешивать.
+- **Антипаттерны:**
+  - борьба с borrow checker через `.clone()` везде («clone-driven development»);
+  - избыточное `Arc<Mutex<_>>` там, где хватило бы канала или `&mut`;
+  - `unwrap()` в production-коде;
+  - god-структуры с десятками полей и lifetimes.
+- **Композиция вместо наследования.** Enum-полиморфизм vs trait objects (`dyn Trait`) — когда что выбирать.
+- **Workspace-структура:** разделение `-core`, `-cli`, `-server`, `-macros` крейтов; чёткие границы абстракций.
+
+**Где изучать:**
+
+- [Rust Design Patterns](https://rust-unofficial.github.io/patterns/) — каноническое собрание идиом.
+- [«Rust API Guidelines»](https://rust-lang.github.io/api-guidelines/) — как делать публичные API.
+- [«Effective Rust»](https://www.lurklurk.org/effective-rust/) Дэвида Дрисдейла — must-read после первого реального проекта.
+- Доклады с RustConf и EuroRust на YouTube.
+
+**Зачем это нужно:** код, который компилируется и проходит тесты, ещё не идиоматичен. Хорошая архитектура делает Rust-проект приятным в поддержке через год. Без этого ты пишешь «Rust как Go» или «Rust как C++» и теряешь половину преимуществ.
+
+**Мини-проект:**
+
+- Перепиши один из своих крейтов в hexagonal-стиле: ядро без I/O + адаптеры (БД, HTTP, CLI) как отдельные модули.
+- Сделай аудит чужого open-source-крейта с точки зрения API guidelines.
 
 ## Этап 17. Системное программирование и ОС
 
-- `mio`, `epoll` / `kqueue` / `io_uring` напрямую.
-- `tokio-uring`, [`glommio`](https://github.com/DataDog/glommio) (thread-per-core).
-- Shared memory, `mmap`, [`memmap2`](https://github.com/RazrFalcon/memmap2-rs).
-- Сигналы Unix ([`signal-hook`](https://github.com/vorner/signal-hook)), процессы, pipes.
-- Свой аллокатор, свой `Future`-executor с нуля.
-- Kernel-разработка: Rust в Linux kernel, [Redox OS](https://www.redox-os.org/), [Theseus](https://www.theseus-os.com/).
-- Bare-metal: `#![no_std]`, `core` vs `alloc` vs `std`, panic-handler, custom target.
-- Bootloader и минимальная ОС (Philipp Oppermann «[Writing an OS in Rust](https://os.phil-opp.com/)»).
+**Что изучать:**
+
+- **Прямая работа с syscalls:** [`mio`](https://github.com/tokio-rs/mio), `epoll` / `kqueue` / `io_uring` напрямую через крейты [`io-uring`](https://github.com/tokio-rs/io-uring), [`rio`](https://github.com/spacejam/rio).
+- **Async-рантаймы для I/O:** [`tokio-uring`](https://github.com/tokio-rs/tokio-uring), [`glommio`](https://github.com/DataDog/glommio) (thread-per-core, полезен для БД и сетевых сервисов с предсказуемой латентностью), [`monoio`](https://github.com/bytedance/monoio).
+- **Shared memory, `mmap`:** [`memmap2`](https://github.com/RazrFalcon/memmap2-rs) для memory-mapped файлов; работа с большими данными без копирования.
+- **Сигналы Unix:** [`signal-hook`](https://github.com/vorner/signal-hook), `nix` крейт для POSIX API; процессы, pipes, fork/exec.
+- **Свой аллокатор и свой `Future`-executor с нуля.** Лучший способ понять, как работает Rust-рантайм.
+- **Kernel-разработка:** Rust в Linux kernel ([Rust for Linux](https://rust-for-linux.com/)), [Redox OS](https://www.redox-os.org/), [Theseus](https://www.theseus-os.com/).
+- **Bare-metal:** `#![no_std]`, `core` vs `alloc` vs `std`, panic-handler, custom target. Bootloader и минимальная ОС — Philipp Oppermann «[Writing an OS in Rust](https://os.phil-opp.com/)».
+
+**Где изучать:**
+
+- «The Linux Programming Interface» (Michael Kerrisk) — фундамент по UNIX API, переносится на Rust один в один.
+- «Writing an OS in Rust» — <https://os.phil-opp.com/> (одна из лучших обучающих серий вообще).
+- Документация Rust for Linux — <https://rust-for-linux.com/>.
+
+**Зачем это нужно:** Rust изначально создавался для системного программирования. Эта ветка ведёт к работе над ядрами, гипервизорами, БД, рантаймами и низкоуровневой инфраструктурой — нишам, где Rust сейчас вытесняет C/C++.
+
+**Мини-проект:**
+
+- Напиши свой простейший event loop поверх `io_uring` или `epoll`.
+- Сделай минимальный `#![no_std]` бинарь под QEMU, который выводит «hello» в VGA-буфер.
 
 ## Этап 18. Распределённые системы и сеть
 
-- Реализация Redis-протокола, Raft ([`openraft`](https://github.com/datafuselabs/openraft)), gossip-протоколы.
-- QUIC через [`quinn`](https://github.com/quinn-rs/quinn), HTTP/2 и HTTP/3.
-- gRPC streaming, interceptors в `tonic`.
-- Observability: OpenTelemetry, [`tracing-opentelemetry`](https://github.com/tokio-rs/tracing-opentelemetry), метрики ([`metrics`](https://github.com/metrics-rs/metrics), [`prometheus`](https://github.com/tikv/rust-prometheus)).
-- Идемпотентность, retry, circuit breaker ([`tower`](https://github.com/tower-rs/tower), [`tower-http`](https://github.com/tower-rs/tower-http)).
-- Event sourcing и CQRS на Rust.
+**Что изучать:**
+
+- **Реализация сетевых протоколов с нуля:** Redis-протокол (RESP), HTTP/1.1 — отличные учебные задачи.
+- **Алгоритмы консенсуса:** Raft через [`openraft`](https://github.com/datafuselabs/openraft), gossip-протоколы (например, SWIM).
+- **QUIC и HTTP/3:** [`quinn`](https://github.com/quinn-rs/quinn); HTTP/2 streaming, HPACK.
+- **gRPC:** streaming, interceptors, middleware в [`tonic`](https://github.com/hyperium/tonic).
+- **Observability в распределёнке:** OpenTelemetry, [`tracing-opentelemetry`](https://github.com/tokio-rs/tracing-opentelemetry), метрики через [`metrics`](https://github.com/metrics-rs/metrics) или [`prometheus`](https://github.com/tikv/rust-prometheus).
+- **Надёжность:** идемпотентность, retry с jitter, circuit breaker, rate limiting через [`tower`](https://github.com/tower-rs/tower) и [`tower-http`](https://github.com/tower-rs/tower-http).
+- **Архитектурные паттерны:** event sourcing и CQRS, saga, outbox pattern.
+
+**Где изучать:**
+
+- «Designing Data-Intensive Applications» (Martin Kleppmann) — теория, применимая к любому языку.
+- Официальный Tokio Tutorial раздел про Mini-Redis.
+- Доклады с RustConf про `tower` и `tonic`.
+- Реальные кодовые базы: `tikv`, `materialize`, `databend`, `risingwave` — это лучшие учебники по распределённому Rust.
+
+**Зачем это нужно:** Rust популярен в инфраструктурных стартапах (TiKV, Materialize, Databend, Linkerd, Vector, Tremor). Это самая «денежная» ниша Rust в индустрии.
+
+**Мини-проект:**
+
+- Реализуй mini-Redis с поддержкой репликации (одна нода-лидер, несколько read-replica).
+- Подними gRPC-сервис на `tonic` с трассировкой через `tracing` + Jaeger/Tempo.
 
 ## Этап 19. Базы данных и хранилища
 
-- Глубже `sqlx`: compile-time проверка запросов, миграции (`sqlx-cli`, [`refinery`](https://github.com/rust-db/refinery)).
-- ORM (`diesel`) vs query-builder ([`sea-query`](https://github.com/SeaQL/sea-query)).
-- Connection pooling ([`deadpool`](https://github.com/bikeshedder/deadpool), [`bb8`](https://github.com/djc/bb8)).
-- Embedded базы: [`sled`](https://github.com/spacejam/sled), [`redb`](https://github.com/cberner/redb), [`rocksdb`](https://github.com/rust-rocksdb/rust-rocksdb), [`fjall`](https://github.com/fjall-rs/fjall).
-- Свой storage engine: B-Tree, LSM, WAL.
-- Векторные БД и поиск: [`qdrant`](https://github.com/qdrant/qdrant), [`tantivy`](https://github.com/quickwit-oss/tantivy).
+**Что изучать:**
+
+- **Глубже `sqlx`:** compile-time проверка запросов через `query!`/`query_as!`, миграции через `sqlx-cli` или [`refinery`](https://github.com/rust-db/refinery).
+- **ORM vs query-builder:** [`diesel`](https://diesel.rs/) (классический type-safe ORM), [`sea-orm`](https://www.sea-ql.org/SeaORM/), [`sea-query`](https://github.com/SeaQL/sea-query) (query builder без ORM-магии).
+- **Connection pooling:** [`deadpool`](https://github.com/bikeshedder/deadpool), [`bb8`](https://github.com/djc/bb8), встроенный пул в `sqlx`.
+- **Embedded базы данных:** [`sled`](https://github.com/spacejam/sled) (LSM), [`redb`](https://github.com/cberner/redb) (B-Tree, ACID), [`rocksdb`](https://github.com/rust-rocksdb/rust-rocksdb), [`fjall`](https://github.com/fjall-rs/fjall).
+- **Свой storage engine:** B-Tree, LSM, WAL, MVCC. Полезный учебный путь — реализовать упрощённый Bitcask или LSM-engine.
+- **Векторные БД и поиск:** [`qdrant`](https://github.com/qdrant/qdrant) (vector DB, целиком на Rust), [`tantivy`](https://github.com/quickwit-oss/tantivy) (полнотекстовый поиск, аналог Lucene).
+
+**Где изучать:**
+
+- Курс CMU 15-445 «Database Systems» — <https://15445.courses.cs.cmu.edu/> (необязательно делать на C++, можно на Rust).
+- «Database Internals» (Alex Petrov).
+- Доки и блог [Materialize](https://materialize.com/) и [TiKV](https://tikv.org/).
+- Туториал «Build your own Redis» / «Build your own SQLite» на сайте codecrafters.io.
+
+**Зачем это нужно:** Rust очень силён в storage-движках и БД (RocksDB-клиенты, TiKV, Materialize, Databend, Quickwit, Qdrant). Понимание устройства БД — топовый навык для любого backend-инженера.
+
+**Мини-проект:**
+
+- Напиши свой key-value движок с WAL, простейшим LSM или B-Tree, поддержкой транзакций.
+- Сделай мини-аналог Elasticsearch на `tantivy` с REST-API на `axum`.
 
 ## Этап 20. WebAssembly углублённо
 
-- `wasm32-unknown-unknown` vs `wasm32-wasi` vs `wasm32-wasip2`.
-- Component Model и WIT-интерфейсы.
-- [`wasmtime`](https://github.com/bytecodealliance/wasmtime), [`wasmer`](https://github.com/wasmerio/wasmer) как embedder'ы.
-- Plugin-системы на WASM ([`extism`](https://extism.org/)).
-- Frontend: сравнение `leptos`, `dioxus`, `yew`, `sycamore` (signals vs vdom).
-- SSR, hydration, server functions.
-- Edge-runtime (Cloudflare Workers, Fastly Compute).
+**Что изучать:**
+
+- **Цели компиляции:** `wasm32-unknown-unknown` (браузер/embedder без stdlib), `wasm32-wasi` / `wasm32-wasip2` (с системным API).
+- **Component Model и WIT-интерфейсы** — будущее композируемых WASM-модулей.
+- **WASM embedder'ы:** [`wasmtime`](https://github.com/bytecodealliance/wasmtime), [`wasmer`](https://github.com/wasmerio/wasmer) — как встраивать WASM-движок в свой Rust-сервис.
+- **Plugin-системы на WASM:** [`extism`](https://extism.org/) — упрощённый фреймворк для расширений.
+- **Frontend на Rust:** сравнение [`leptos`](https://leptos.dev/), [`dioxus`](https://dioxuslabs.com/), [`yew`](https://yew.rs/), [`sycamore`](https://sycamore-rs.netlify.app/) — signals vs vdom.
+- **SSR, hydration, isomorphic functions** — Leptos и Dioxus поддерживают это нативно.
+- **Edge-runtime:** Cloudflare Workers ([`worker`](https://github.com/cloudflare/workers-rs) крейт), Fastly Compute, Vercel Edge.
+
+**Где изучать:**
+
+- «The `wasm-bindgen` Guide» — <https://rustwasm.github.io/wasm-bindgen/>.
+- «Rust and WebAssembly» — <https://rustwasm.github.io/docs/book/>.
+- Документация Leptos и Dioxus.
+- Bytecode Alliance — <https://bytecodealliance.org/> (WASI и Component Model).
+
+**Зачем это нужно:** WASM — главная тема последних нескольких лет в Rust-экосистеме. Edge-вычисления, плагины, фронтенд, sandboxing — везде Rust + WASM становится дефолтным выбором.
+
+**Мини-проект:**
+
+- Сделай SPA на Leptos / Dioxus с SSR + hydration; задеплой на Cloudflare Workers или Fly.io.
+- Встрой WASM-плагины в свой Rust-сервис через `wasmtime` (например, пользовательские фильтры/трансформации).
 
 ## Этап 21. Embedded и реальное время
 
-- `embedded-hal` 1.0, HAL-крейты для конкретных МК.
-- RTOS на Rust: [Embassy](https://embassy.dev/) (async-first), [RTIC](https://rtic.rs/) (priority-based).
-- DMA, прерывания, критические секции (`critical-section`).
-- `defmt` для эффективного логирования.
-- [`probe-rs`](https://probe.rs/) для отладки и прошивки.
-- Безопасность памяти на `no_std`: [`heapless`](https://github.com/rust-embedded/heapless), статическое выделение.
+**Что изучать:**
+
+- **Hardware Abstraction Layer:** [`embedded-hal`](https://github.com/rust-embedded/embedded-hal) 1.0 как общий интерфейс; HAL-крейты для конкретных МК ([`stm32-hal`](https://github.com/David-OConnor/stm32-hal), [`esp-hal`](https://github.com/esp-rs/esp-hal), [`rp2040-hal`](https://github.com/rp-rs/rp-hal), [`nrf-hal`](https://github.com/nrf-rs/nrf-hal)).
+- **RTOS и async-фреймворки на embedded:** [Embassy](https://embassy.dev/) (async-first, очень удобный) — де-факто стандарт для нового кода; [RTIC](https://rtic.rs/) (priority-based, без аллокатора).
+- **DMA, прерывания, критические секции** через крейт [`critical-section`](https://github.com/rust-embedded/critical-section).
+- **Эффективное логирование на МК:** [`defmt`](https://github.com/knurling-rs/defmt) — компактный бинарный формат логов с decoding на хосте.
+- **Отладка и прошивка:** [`probe-rs`](https://probe.rs/) — единый инструмент для GDB/RTT/flashing/SWO.
+- **Безопасность памяти на `no_std`:** [`heapless`](https://github.com/rust-embedded/heapless) (`Vec`, `String`, очереди фиксированного размера), статическое выделение, отсутствие аллокатора.
+
+**Где изучать:**
+
+- The Embedded Rust Book — <https://docs.rust-embedded.org/book/>.
+- Discovery Book (на STM32F3 Discovery) — <https://docs.rust-embedded.org/discovery/>.
+- Документация Embassy — <https://embassy.dev/book/>.
+- Канал [Knurling-rs](https://knurling.ferrous-systems.com/) с туториалами по `defmt`/`probe-rs`.
+
+**Зачем это нужно:** Rust в embedded — одна из самых быстрорастущих ниш. Производители (Espressif, Nordic, ST) официально поддерживают Rust. Async на МК через Embassy реально удобен и отличается от классического C-подхода.
+
+**Мини-проект:**
+
+- Возьми ESP32 / RP2040 / STM32, напиши на Embassy прошивку, которая по Wi-Fi/BLE отдаёт данные с датчика.
+- Реализуй простой PID-регулятор и управление шаговым мотором / сервоприводом через PWM + DMA.
 
 ## Этап 22. Геймдев и графика
 
-- ECS в `bevy`: компоненты, системы, ресурсы, schedules.
-- Шейдеры на WGSL, [`wgpu`](https://github.com/gfx-rs/wgpu) напрямую.
-- Физика: [`rapier`](https://github.com/dimforge/rapier), [`avian`](https://github.com/Jondolf/avian).
-- Networking для игр: [`lightyear`](https://github.com/cBournhonesque/lightyear), [`bevy_replicon`](https://github.com/projectharmonia/bevy_replicon).
-- Альтернативы: [`fyrox`](https://github.com/FyroxEngine/Fyrox), `macroquad`, `ggez`.
-- Графика низкого уровня: [`vulkano`](https://github.com/vulkano-rs/vulkano), [`ash`](https://github.com/ash-rs/ash) (Vulkan bindings).
+**Что изучать:**
+
+- **ECS-движок [Bevy](https://bevyengine.org/):** компоненты, системы, ресурсы, schedules, plugins. Идиоматический ECS на Rust.
+- **Шейдеры и графика:** WGSL, [`wgpu`](https://github.com/gfx-rs/wgpu) напрямую (cross-API: Vulkan/Metal/DX12/WebGPU), [`naga`](https://github.com/gfx-rs/naga) для трансляции шейдеров.
+- **Физика:** [`rapier`](https://github.com/dimforge/rapier) (2D/3D физика), [`avian`](https://github.com/Jondolf/avian) (нативная для Bevy).
+- **Сетевой код для игр:** [`lightyear`](https://github.com/cBournhonesque/lightyear), [`bevy_replicon`](https://github.com/projectharmonia/bevy_replicon), client-side prediction, server reconciliation.
+- **Альтернативные движки:** [`fyrox`](https://github.com/FyroxEngine/Fyrox) (бывший rg3d, классический сцен-граф), [`macroquad`](https://github.com/not-fl3/macroquad) (быстрый старт для 2D), [`ggez`](https://github.com/ggez/ggez).
+- **Низкоуровневая графика:** [`vulkano`](https://github.com/vulkano-rs/vulkano), [`ash`](https://github.com/ash-rs/ash) (raw Vulkan bindings).
+
+**Где изучать:**
+
+- The Bevy Book — <https://bevyengine.org/learn/book/>.
+- The wgpu tutorial — <https://sotrh.github.io/learn-wgpu/>.
+- «Learn OpenGL» (Joey de Vries) — переносится на wgpu один в один.
+- YouTube-канал Logic Projects, разборы Bevy от Chris Biscardi.
+
+**Зачем это нужно:** геймдев на Rust ещё не доминирует индустрию, но Bevy быстро становится зрелым. Это интересная ветка для тех, кто любит игры и графику, и при этом отличный стресс-тест продвинутой типовой системы и перформанса.
+
+**Мини-проект:**
+
+- Сделай 2D-платформер или top-down-шутер на Bevy с физикой через `avian`.
+- Реализуй простой ray-tracer на `wgpu` compute-шейдерах.
 
 ## Этап 23. ML, AI и научные вычисления
 
-- `candle` (HuggingFace) — minimalist tensor framework.
-- `burn` — гибкий ML-фреймворк с разными бэкендами.
-- `tch-rs` — биндинги к LibTorch.
-- [`ort`](https://github.com/pykeio/ort) — ONNX Runtime.
-- Линейная алгебра: [`nalgebra`](https://nalgebra.org/), [`ndarray`](https://github.com/rust-ndarray/ndarray), [`faer`](https://github.com/sarah-quinones/faer-rs).
-- Распараллеливание: `rayon`, GPU через [`cust`](https://github.com/Rust-GPU/Rust-CUDA) (CUDA), [`cubecl`](https://github.com/tracel-ai/cubecl).
+**Что изучать:**
+
+- **Tensor-фреймворки:** [`candle`](https://github.com/huggingface/candle) (HuggingFace, минималистичный, для inference), [`burn`](https://github.com/tracel-ai/burn) (гибкий, разные бэкенды: CPU / wgpu / CUDA / Metal).
+- **Биндинги к C++ ML-стекам:** [`tch-rs`](https://github.com/LaurentMazare/tch-rs) — биндинги к LibTorch; [`ort`](https://github.com/pykeio/ort) — ONNX Runtime для inference.
+- **Линейная алгебра и научка:** [`nalgebra`](https://nalgebra.org/) (геометрия, графика), [`ndarray`](https://github.com/rust-ndarray/ndarray) (numpy-подобный), [`faer`](https://github.com/sarah-quinones/faer-rs) (быстрый dense linalg).
+- **Распараллеливание:** [`rayon`](https://github.com/rayon-rs/rayon) (data parallelism), GPU через [`cust`](https://github.com/Rust-GPU/Rust-CUDA) (CUDA bindings) и [`cubecl`](https://github.com/tracel-ai/cubecl) (универсальный GPU compute).
+- **LLM и inference:** [`mistral.rs`](https://github.com/EricLBuehler/mistral.rs), [`llama.cpp`-биндинги](https://github.com/utilityai/llama-cpp-rs), запуск open-weight моделей на Rust-стеке.
+- **Эмбеддинги и vector search:** связка `candle` / `ort` + `qdrant` / `tantivy`.
+
+**Где изучать:**
+
+- Документация `candle` и `burn` (с примерами).
+- Курс fast.ai (Python), но реализуй упражнения на Rust + `burn`.
+- «Deep Learning» (Goodfellow et al.) — теоретический фундамент.
+- Блог HuggingFace о `candle`.
+
+**Зачем это нужно:** Rust используется как infra-слой для ML-сервисов: токенизация, inference, vector search, серверы для моделей. Скорость и предсказуемая память делают его идеальным для production-ML, где Python-стек слишком тяжёл.
+
+**Мини-проект:**
+
+- Сделай локальный LLM-чат с inference на `candle` или `mistral.rs` и REST-API на `axum`.
+- Реализуй semantic search: эмбеддинги через `candle` + индекс через `qdrant` или `tantivy`.
 
 ## Этап 24. Инструментарий, DevEx и продакшн
 
-- Workspaces, feature flags, conditional compilation.
-- Build scripts (`build.rs`).
-- cargo-расширения: `cargo-make`, `cargo-nextest`, `cargo-watch`, `cargo-expand`, `cargo-udeps`, `cargo-machete`.
-- Кросс-компиляция: [`cross`](https://github.com/cross-rs/cross), [`cargo-zigbuild`](https://github.com/rust-cross/cargo-zigbuild).
-- Минимизация бинарника: LTO, `panic=abort`, `strip`, `opt-level="z"`.
-- Docker: distroless и scratch-образы, multi-stage builds.
-- CI/CD: GitHub Actions с [`Swatinem/rust-cache`](https://github.com/Swatinem/rust-cache), matrix-сборки.
-- Релизы: [`cargo-release`](https://github.com/crate-ci/cargo-release), [`cargo-dist`](https://github.com/axodotdev/cargo-dist), [`release-plz`](https://github.com/release-plz/release-plz).
-- Семантическое версионирование: `cargo-semver-checks`.
+**Что изучать:**
+
+- **Workspaces, feature flags, conditional compilation.** Как разбивать большой проект на крейты, не плодя дубликаты, и контролировать набор фич.
+- **Build scripts (`build.rs`).** Кодогенерация, биндинги через [`bindgen`](https://github.com/rust-lang/rust-bindgen) / [`cxx`](https://github.com/dtolnay/cxx), линковка с C/C++.
+- **Полезные cargo-расширения:** [`cargo-make`](https://github.com/sagiegurari/cargo-make), [`cargo-nextest`](https://github.com/nextest-rs/nextest) (быстрый параллельный тест-раннер), [`cargo-watch`](https://github.com/watchexec/cargo-watch), [`cargo-expand`](https://github.com/dtolnay/cargo-expand) (раскрытие макросов), [`cargo-udeps`](https://github.com/est31/cargo-udeps), [`cargo-machete`](https://github.com/bnjbvr/cargo-machete) (поиск неиспользуемых зависимостей), [`cargo-outdated`](https://github.com/kbknapp/cargo-outdated).
+- **Кросс-компиляция:** [`cross`](https://github.com/cross-rs/cross), [`cargo-zigbuild`](https://github.com/rust-cross/cargo-zigbuild) (через `zig` как линкер — отличный UX).
+- **Минимизация бинарника:** LTO (`lto = "fat"`), `panic = "abort"`, `strip = true`, `opt-level = "z"`, `codegen-units = 1`.
+- **Контейнеризация:** distroless и scratch-образы, multi-stage builds, статически линкованные бинари (`x86_64-unknown-linux-musl`).
+- **CI/CD:** GitHub Actions с [`Swatinem/rust-cache`](https://github.com/Swatinem/rust-cache), matrix-сборки, артефакты, релизы.
+- **Релизы:** [`cargo-release`](https://github.com/crate-ci/cargo-release), [`cargo-dist`](https://github.com/axodotdev/cargo-dist), [`release-plz`](https://github.com/release-plz/release-plz) (auto-PR с changelog).
+- **Семвер и совместимость:** [`cargo-semver-checks`](https://github.com/obi1kenobi/cargo-semver-checks).
+
+**Где изучать:**
+
+- The Cargo Book — <https://doc.rust-lang.org/cargo/>.
+- «Zero To Production In Rust» (Luca Palmieri) — лучшая книга по практическому продакшну на Rust.
+- Документация и README цитированных выше cargo-расширений.
+- Блог [`fasterthanli.me`](https://fasterthanli.me/) — про реальный продакшн на Rust.
+
+**Зачем это нужно:** «работает на моей машине» в Rust — это ещё полпути до продакшна. Хороший DevEx (тесты, кросс-сборка, бинарники, релизы) экономит десятки часов и делает крейт привлекательным для контрибьюторов.
+
+**Мини-проект:**
+
+- Настрой полный CI для одного из своих крейтов: тесты на Linux/macOS/Windows, `cargo-deny`, `cargo-semver-checks`, релизы через `cargo-dist`.
+- Сделай Docker-образ <10 MB на musl + scratch.
 
 ## Этап 25. Контрибьюшн и развитие языка
 
-- RFC-процесс.
-- Структура `rust-lang/rust`: компилятор (`rustc`), стандартная библиотека, cargo.
-- MIR, HIR, THIR.
-- Borrow checker (NLL, Polonius).
-- Edition-механизм (2015 → 2018 → 2021 → 2024).
-- «This Week in Rust», Inside Rust Blog.
-- Менторство в [`rustc-dev-guide`](https://rustc-dev-guide.rust-lang.org/).
+**Что изучать:**
+
+- **RFC-процесс.** Как предлагается изменение языка/стандартной библиотеки: <https://github.com/rust-lang/rfcs>. Прочитай несколько принятых и отклонённых RFC, чтобы понять стиль аргументации.
+- **Структура `rust-lang/rust`:** компилятор (`rustc`), стандартная библиотека (`core`/`alloc`/`std`), `cargo`, `rustdoc`, `miri`, `clippy`, `rustfmt`.
+- **Внутренние представления компилятора:** AST → HIR → THIR → MIR → LLVM IR. Каждый уровень решает свою задачу: парсинг, проверка типов, borrow checking, оптимизации.
+- **Borrow checker:** старая версия (lexical lifetimes) → NLL (Non-Lexical Lifetimes) → [Polonius](https://rust-lang.github.io/polonius/) — будущий движок на Datalog.
+- **Edition-механизм** (2015 → 2018 → 2021 → 2024). Как Rust развивается без поломки совместимости.
+- **Информационные источники для core-разработки:** «[This Week in Rust](https://this-week-in-rust.org/)», [Inside Rust Blog](https://blog.rust-lang.org/inside-rust/), [Rust Internals](https://internals.rust-lang.org/), Zulip-чаты команд (`compiler`, `lang`, `libs`).
+- **Менторство:** [`rustc-dev-guide`](https://rustc-dev-guide.rust-lang.org/) — официальное руководство по разработке самого компилятора. Лейбл `E-mentor` в issue-трекере `rust-lang/rust`.
+
+**Где изучать:**
+
+- The `rustc` Dev Guide — <https://rustc-dev-guide.rust-lang.org/>.
+- The Rust Reference — <https://doc.rust-lang.org/reference/>.
+- Доклады RustConf «What's new in rustc» и «Inside Polonius».
+- Книги: «Rustc Codegen Cranelift», блог-посты Niko Matsakis.
+
+**Зачем это нужно:** это вершина пути. Понимание устройства компилятора и языкового процесса делает тебя «Rust-инженером с большой буквы», даёт долгосрочное влияние на экосистему и открывает доступ к самым сложным и интересным задачам.
+
+**Мини-проект:**
+
+- Найди `E-mentor` или `E-easy` issue в `rust-lang/rust` или `rust-lang/cargo`, сделай PR.
+- Напиши свой clippy-lint или мини-инструмент анализа на базе `rustc_driver` / `rustc_lint`.
 
 ---
 
