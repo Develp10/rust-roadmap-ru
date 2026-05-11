@@ -131,6 +131,11 @@ cargo update
 - [Crafting Interpreters](https://www.craftinginterpreters.com/) — пишем интерпретатор (оригинал на Java/C, есть множество Rust-портов).
 - [Zero To Production In Rust](https://www.zero2prod.com/) — Luca Palmieri, веб-сервисы (платная, но стоит того).
 
+## 🎓 Продвинутые платные курсы 
+
+- [Rust продвинутый: лайфтаймы, async, unsafe и производительность](https://stepik.org/a/285608/pay?promo=e1a7a808ed40a7be) — Внутри: async, unsafe, gRPC, lock-free, observability, Kafka, NATS, axum, tower, CI/CD и канареечный деплой. 21 модуль, 84 урока, 400+ проверочных шагов.
+- [Rust полный курс разработчика! С нуля до профи"](https://stepik.org/a/269250/pay?promo=b36f020f77bfb2d5) — 6 модулей, 50 уроков, 143 теста. Ownership, borrowing, traits, async, Tokio, Axum, макросы, WASM — всё разложено по полочкам и закреплено практикой.
+- 
 ## 💪 Практика и упражнения
 
 - [Rustlings](https://github.com/rust-lang/rustlings) — 90+ интерактивных упражнений, обязательно в начале.
