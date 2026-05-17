@@ -191,6 +191,19 @@ cargo update
 - [Awesome Embedded Rust](https://github.com/rust-embedded/awesome-embedded-rust) — embedded.
 - [Awesome WebAssembly](https://github.com/mbasso/awesome-wasm) — WASM.
 
+## 🎯 Подготовка к собеседованиям
+
+- [**Develp10/rustinterviewquiestions**](https://github.com/Develp10/rustinterviewquiestions) — большой репозиторий вопросов с собеседований по Rust на позиции middle, senior и staff. Подходит как продолжение этого roadmap: когда базу прошли, дальше идёте сюда отрабатывать конкретные вопросы.
+
+Что внутри:
+
+- **100 базовых вопросов с разбором** по разделам: владение и лайфтаймы, типы и трейты, конкурентность, async и runtime, unsafe и FFI, производительность, макросы, архитектура и дизайн API. Каждый ответ с кодом, типичными ошибками и пояснением, что происходит на уровне компилятора и рантайма.
+- **21 продвинутый вопрос уровня staff и expert** (GAT, HRTB, variance, Pin/Unpin, Stacked Borrows, memory ordering, lock-free SPSC, custom allocators, soundness pitfalls, dropck, sealed traits, type-state).
+- **Оценки времени на подготовку** — макро-план по разделам и микро-чек на один вопрос с тремя колонками сложности: «база», «средне», «быстро».
+- **Двухнедельный план** для тех, у кого собес скоро.
+- **Подборка полезных ссылок** — официальная документация, книги (Rust Atomics and Locks, Rustonomicon), углублённое чтение (Crust of Rust, Tyler Mandry про async), инструменты (Miri, Loom, cargo-expand).
+- **Папка `tasks/`** с практическими задачами уровня senior/staff: lock-free структуры, self-referential типы в async, FFI с тензорными библиотеками, soundness кастомных коллекций.
+
 ---
 
 # 🦀 Roadmap по изучению Rust: от нуля до профи
